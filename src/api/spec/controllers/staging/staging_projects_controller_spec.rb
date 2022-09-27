@@ -110,15 +110,13 @@ RSpec.describe Staging::StagingProjectsController do
         it { expect(response.body).not_to include("<staging_project name=\"#{staging_project.name}\" state=") }
 
         it 'returns the staging_project default xml' do
-          assert_select 'staging_project' do
-            assert_select 'staged_requests', 0
-            assert_select 'untracked_requests', 0
-            assert_select 'obsolete_requests', 0
-            assert_select 'missing_reviews', 0
-            assert_select 'broken_packages', 0
-            assert_select 'checks', 0
-            assert_select 'history', 0
-          end
+          expect(response.body).to have_selector('staging_project > staged_requests', count: 0)
+          expect(response.body).to have_selector('staging_project > untracked_requests', count: 0)
+          expect(response.body).to have_selector('staging_project > obsolete_requests', count: 0)
+          expect(response.body).to have_selector('staging_project > missing_reviews', count: 0)
+          expect(response.body).to have_selector('staging_project > broken_packages', count: 0)
+          expect(response.body).to have_selector('staging_project > checks', count: 0)
+          expect(response.body).to have_selector('staging_project > history', count: 0)
         end
       end
 
@@ -133,21 +131,13 @@ RSpec.describe Staging::StagingProjectsController do
         it { expect(response.body).not_to include("<staging_project name=\"#{staging_project.name}\" state=") }
 
         it 'returns the staging_project with requests xml' do
-          assert_select 'staging_project' do
-            assert_select 'staged_requests', 1 do
-              assert_select 'request', 3
-            end
-            assert_select 'untracked_requests', 1 do
-              assert_select 'request', 1
-            end
-            assert_select 'obsolete_requests', 1
-            assert_select 'missing_reviews', 1 do
-              assert_select 'review', 1
-            end
-            assert_select 'broken_packages', 0
-            assert_select 'checks', 0
-            assert_select 'history', 0
-          end
+          expect(response.body).to have_selector('staging_project > staged_requests[count=1] > requests', count: 3)
+          expect(response.body).to have_selector('staging_project > untracked_requests[count=1] > request', count: 1)
+          expect(response.body).to have_selector('staging_project > obsolete_requests', count: 1)
+          expect(response.body).to have_selector('staging_project > missing_reviews[count=1] > review', count: 1)
+          expect(response.body).to have_selector('staging_project > broken_packages', count: 0)
+          expect(response.body).to have_selector('staging_project > checks', count: 0)
+          expect(response.body).to have_selector('staging_project > history', count: 0)
         end
       end
 
@@ -162,17 +152,13 @@ RSpec.describe Staging::StagingProjectsController do
         it { expect(response.body).to include("<staging_project name=\"#{staging_project.name}\" state=") }
 
         it 'returns the staging_project with status xml' do
-          assert_select 'staging_project' do
-            assert_select 'staged_requests', 0
-            assert_select 'untracked_requests', 0
-            assert_select 'obsolete_requests', 0
-            assert_select 'missing_reviews', 0
-            assert_select 'broken_packages', 1 do
-              assert_select 'package', 2
-            end
-            assert_select 'checks', 1
-            assert_select 'history', 0
-          end
+          expect(response.body).to have_selector('staging_project > staged_requests', count: 0)
+          expect(response.body).to have_selector('staging_project > untracked_requests', count: 0)
+          expect(response.body).to have_selector('staging_project > obsolete_requests', count: 0)
+          expect(response.body).to have_selector('staging_project > missing_reviews', count: 0)
+          expect(response.body).to have_selector('staging_project > broken_packages[count=1] > package', count: 2)
+          expect(response.body).to have_selector('staging_project > checks', count: 1)
+          expect(response.body).to have_selector('staging_project > history', count: 0)
         end
       end
 
@@ -187,14 +173,12 @@ RSpec.describe Staging::StagingProjectsController do
         it { expect(response.body).not_to include("<staging_project name=\"#{staging_project.name}\" state=") }
 
         it 'returns the staging_project with history xml' do
-          assert_select 'staging_project' do
-            assert_select 'staged_requests', 0
-            assert_select 'untracked_requests', 0
-            assert_select 'obsolete_requests', 0
-            assert_select 'missing_reviews', 0
-            assert_select 'broken_packages', 0
-            assert_select 'history', 1
-          end
+          expect(response.body).to have_selector('staging_project > staged_requests', count: 0)
+          expect(response.body).to have_selector('staging_project > untracked_requests', count: 0)
+          expect(response.body).to have_selector('staging_project > obsolete_requests', count: 0)
+          expect(response.body).to have_selector('staging_project > missing_reviews', count: 0)
+          expect(response.body).to have_selector('staging_project > broken_packages', count: 0)
+          expect(response.body).to have_selector('staging_project > history', count: 1)
         end
       end
 
@@ -209,22 +193,12 @@ RSpec.describe Staging::StagingProjectsController do
         it { expect(response.body).to include("<staging_project name=\"#{staging_project.name}\" state=") }
 
         it 'returns the staging_project with requests, status and history xml' do
-          assert_select 'staging_project' do
-            assert_select 'staged_requests', 1 do
-              assert_select 'request', 3
-            end
-            assert_select 'untracked_requests', 1 do
-              assert_select 'request', 1
-            end
-            assert_select 'obsolete_requests', 1
-            assert_select 'missing_reviews', 1 do
-              assert_select 'review', 1
-            end
-            assert_select 'broken_packages', 1 do
-              assert_select 'package', 2
-            end
-            assert_select 'history', 1
-          end
+          expect(response.body).to have_selector('staging_project > staged_requests[count=1] > request', count: 3)
+          expect(response.body).to have_selector('staging_project > untracked_requests[count=1] > request', count: 1)
+          expect(response.body).to have_selector('staging_project > obsolete_requests', count: 1)
+          expect(response.body).to have_selector('staging_project > missing_reviews[count=1] > review', count: 1)
+          expect(response.body).to have_selector('staging_project > broken_packages[count=1] > review', count: 2)
+          expect(response.body).to have_selector('staging_project > history', count: 1)
         end
       end
     end
